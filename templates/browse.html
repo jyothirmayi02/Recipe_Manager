@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Recipes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>{{ page_title}}</h1>
+      <div class="header-actions">
+        <form method="GET" action="{{ request.path }}" class="search-bar">
+          <input type="text" name="search" placeholder="Search recipes..." value="{{ search or '' }}">
+          <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <!--<a href="/" class="btn-small">⬅ Back to Home</a>-->
+      </div>
+      <a href="/" class="btn-small fixed-btn">⬅ Back to Home</a>
+    </div>
+    <div class="recipe-list">
+      {% for recipe in recipes %}
+      <div class="recipe-card" onclick="window.location='/recipe/{{ recipe['id'] }}'">
+        {% if recipe['image_filename'] %}
+        <img src="{{ url_for('static', filename='uploads/' + recipe['image_filename']) }}" alt="{{ recipe['title'] }}"
+          style="width:100%; height: 180px;object-fit: cover;border-radius:10px; margin-bottom:10px;"
+          class="recipe-card-img">
+        {% else %}
+        <div class="recipe-card-placeholder">No Image</div>
+        {% endif %}
+        <div class="recipe-card-content">
+          <div class="" title-row>
+            <h2 class="" card-title>{{ recipe['title'] }}</h2>
+            <form action="/toggle_favorite/{{ recipe['id'] }}" method="POST"
+              style="position:absolute; top:12px; right:12px;" onclick="event.stopPropagation();">
+              <button type="submit" class="fav-btn">
+                {% if recipe['is_favorite'] %}
+                <i class="fas fa-heart"></i> <!-- filled -->
+                {% else %}
+                <i class="far fa-heart"></i> <!-- empty -->
+                {% endif %}
+              </button>
+            </form>
+          </div>
+          <div class="recipe-meta">
+            <p><i class="fas fa-utensils"></i> {{ recipe['cuisine'] }}</p>
+            <p><i class="fas fa-tag"></i> {{ recipe['category'] }}</p>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p>No recipes added yet!</p>
+      {% endfor %}
+    </div>
+
+
+
+</body>
+<script>
+document.querySelectorAll("form[action^='/toggle_favorite']").forEach(form => {
+  form.addEventListener("submit", function(event) {
+    event.preventDefault(); // stop full page reload
+    const recipeId = this.getAttribute("action").split("/").pop();
+    const card = this.closest(".recipe-card");
+    const btn = this.querySelector(".fav-btn");
+
+    fetch(this.action, { method: "POST" })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          if (data.new_status === 1) {
+            btn.innerHTML = '<i class="fas fa-heart"></i>'; // filled
+          } else {
+            btn.innerHTML = '<i class="far fa-heart"></i>'; // empty
+            // If on favorites page, remove card instantly
+            if (window.location.pathname.includes("favorites")) {
+              card.remove();
+            }
+          }
+        }
+      });
+  });
+});
+</script>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Recipe Manager</h1>
+        <form method="get" action="{{ url_for('browse') }}">
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="">All Categories</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="Snack">Snack</option>
+                        <option value="Beverage">Beverage</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="cuisine">Cuisine</label>
+                    <select id="cuisine" name="cuisine">
+                        <option value="">All Cuisines</option>
+                        <option value="italian">Italian</option>
+                        <option value="indian">Indian</option>
+                        <option value="mexican">Mexican</option>
+                        <option value="chinese">Chinese</option>
+                    </select>
+                </div>
+            </div>
+            <div class="buttons">
+                <a href="/favorites" class="btn btn-primary">
+                    <i class="fas fa-heart"></i> Favorites
+                </a>
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-utensils"></i> Browse Recipes
+                </button>
+            </div>
+        </form>
+        <a href="/add" class="btn-add">+</a>
+    </div>
+</body>
+
+
+</html>
