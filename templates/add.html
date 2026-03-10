@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Recipe</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="filter-group">
+      <label for="title">Recipe Title</label>
+      <input type="text" name="title" value="{{ recipe['title'] if edit else '' }}" required>
+    </div>
+
+    <!-- Cuisine -->
+    <div class="filter-group">
+      <label for="cuisine">Cuisine</label>
+      <select name="cuisine" required>
+        {% for c in ['Italian','Indian','Mexican','Chinese'] %}
+        <option value="{{ c }}" {% if edit and recipe['cuisine']==c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Category -->
+    <div class="filter-group">
+      <label for="category">Category</label>
+      <select name="category" required>
+        {% for cat in ['Breakfast','Lunch','Dinner','Dessert','Snack','Beverage'] %}
+        <option value="{{ cat }}" {% if edit and recipe['category']==cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+
+    <div class="filter-group">
+      <label for="image">Recipe Image</label>
+      <input type="file" name="image">
+      {% if edit and recipe['image_filename'] %}
+      <p>Current image:</p>
+      <img src="{{ url_for('static', filename='uploads/' + recipe['image_filename']) }}" width="150">
+      {% endif %}
+    </div>
+
+
+
+    </div>
+    <div class="filter-group">
+      <label for="ingredients">Ingredients</label>
+      <textarea name="ingredients" rows="4" required>{{ recipe['ingredients'] if edit else '' }}</textarea>
+    </div>
+
+    <div class="filter-group">
+      <label for="steps">Preparation Steps</label>
+      <textarea name="steps" rows="6" required>{{ recipe['steps'] if edit else '' }}</textarea>
+    </div>
+    <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{{ 'Update Recipe' if edit else 'Add Recipe' }}</button>
+    <a href="/" class="btn btn-secondary">⬅ Back to Home</a>
+    </div>
+    </div>
+  </form>
+  </div>
+</body>
+
+</html>
